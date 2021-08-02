@@ -1,0 +1,113 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block titulo %}Available{% endblock titulo %}
+{% block content %}
+
+<div class="row">
+
+  <div class="col-lg-7 col-md-7 col-sm-12">
+    <h1 class="mt-4 text-center">Rooms Found</h1>
+    <hr>
+
+    {% for room in products %}
+    <div class="card">
+      <div class="row">
+        <div class="col-sm-5">
+          <img class="d-block w-100" src="{{'images/'}}{{room.image_header}}" alt="{{room.name}}">
+        </div>
+        <div class="col-sm-7">
+          <div class="card-block">
+            <h4 class="card-title"><strong>{{ room.name}}</strong></h4>
+            <p class="card-text">{{ room.roomtype__name }}</p>
+            <p class="card-text"><strong>People: </strong>{{ room.roomtype__people }}</p>
+            <p class="card-text"><strong>Beds: </strong>{{ room.beds }}</p>
+            <p class="card-text"><strong>Price per night: </strong>{{ room.price_room }}</p>
+            <br>
+            <button data-product={{room.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Agregar Reserva</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="col-lg-5 col-md-5 col-sm-12">
+    <div class="jumbotron jumbotron-fluid sticky-top">
+      <div class="container">
+        <form method="GET" action="checkout">
+          {% csrf_token %}
+          <h3>Su Reserva</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <span class="form-label">Check In</span>
+                <input name="din" class="form-control" type="text" value="{{checkin}}" readonly>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <span class="form-label">Check out</span>
+                <input name="dout" class="form-control" type="text" value="{{checkout}}" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <span class="form-label">Adults</span>
+                <input type="text" name="a" class="form-control" value="{{adults}}" readonly>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <span class="form-label">Children</span>
+                <input type="text" name="c" class="form-control" value="{{children}}" readonly>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <span class="form-label">Noches:</span>
+              <input type="text" class="form-control nights" name="nights" id="nights" value="{{night}}">
+            </div>
+          </div>
+          <br>
+          <div class="box-element">
+            <div class="cart-row">
+              <div style="flex:2"><strong>Item</strong></div>
+              <div style="flex:1"><strong>Price</strong></div>
+              <div style="flex:1"><strong>Quantity</strong></div>
+              <div style="flex:1"><strong>Total</strong></div>
+            </div>
+
+            {% for item in items %}
+
+            <div class="cart-row">
+              <div style="flex:2"><p>{{item.product.name}}</p></div>
+              <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+              <div style="flex:1">
+                <p class="quantity">{{item.quantity}}</p>
+                <div class="quantity">
+                  <img data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/arrow-up.png' %}">
+                  <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}">
+                </div>
+              </div>
+              <div style="flex:1"><p>${{item.get_total}}</p></div>
+            </div>
+            {% endfor %}
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">checkout</a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}

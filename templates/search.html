@@ -1,0 +1,69 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block titulo %}Search{% endblock titulo %}
+{% block content %}
+
+<div class="row">
+
+  <div class="col-lg-7 col-md-7 col-sm-12">
+    <h1 class="mt-4 text-center">Rooms Found</h1>
+    <hr>
+
+    {% for room in search %}
+    <div class="card">
+      <div class="row">
+        <div class="col-sm-5">
+          <img class="d-block w-100" src="{{'images/'}}{{room.image_header}}" alt="{{room.name}}">
+        </div>
+        <div class="col-sm-7">
+          <div class="card-block">
+            <h4 class="card-title"><strong>{{ room.name}}</strong></h4>
+            <p class="card-text">{{ room.roomtype__name }}</p>
+            <p class="card-text"><strong>People: </strong>{{ room.roomtype__people }}</p>
+            <p class="card-text"><strong>Beds: </strong>{{ room.beds }}</p>
+            <p class="card-text"><strong>Price per night: </strong>{{ room.price_room }}</p>
+            <br>
+            <a href="{% url 'available' room.id %}" class="btn btn-secondary btn-sm float-justify">Check Availability</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="col-lg-5 col-md-5 col-sm-12">
+    <div class="jumbotron jumbotron-fluid sticky-top">
+      <div class="container">
+        <form method="GET" action="search">
+          {% csrf_token %}
+          <h3>Su Reserva</h3>
+          <div class="form-row">
+            <div class="form-group col-md-4 col-sm-12">
+              <label for="checkin">Llegada: </label>
+              <input type="date" class="form-control" id="checkin" value="2021-07-30">
+            </div>
+            <div class="form-group col-md-4 col-sm-12">
+              <label for="checkout">Salida: </label>
+              <input type="date" class="form-control" id="checkout" value="2021-07-31">
+            </div>
+            <div class="form-group col-md-4 col-sm-12">
+              <label for="nights">Noches: </label>
+              <input type="text" class="form-control" id="nights" value="1" readonly>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <input type="submit" class="btn btn-success btn-lg btn-block" value="Checkout">
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
