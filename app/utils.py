@@ -54,8 +54,12 @@ def cartData(request):
 def guestOrder(request, data):
     print('User is not logged in..')
     print('COOKIES:', request.COOKIES)
+    type_id = data['form']['type_id']
+    numb = data['form']['numb']
     name = data['form']['name']
+    last_name = data['form']['last_name']
     email = data['form']['email']
+    phone = data['form']['phone']
 
     cookieData = cookieCart(request)
     items = cookieData['items']
@@ -72,5 +76,6 @@ def guestOrder(request, data):
 
     for item in items:
         product = Room.objects.get(id=item['product']['id'])
-        orderItem = OrderItem.objects.create(product=product, order=order,quantity=item['quantity'])
+        orderItem = OrderItem.objects.create(room=product, order=order,quantity=item['quantity'])
+        "Room.objects.filter(id=product).update(Status='Ocupada')"
     return customer, order

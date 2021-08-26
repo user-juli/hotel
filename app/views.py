@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
-import datetime
 from .models import *
 from django.views.generic import TemplateView,DetailView,ListView,CreateView
 from .utils import cookieCart, cartData, guestOrder
 from django.utils.dateparse import parse_date
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -118,7 +117,7 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
+    "transaction_id = datetime.datetime.now().timestamp()"
     data = json.loads(request.body)
 
     if request.user.is_authenticated:
@@ -129,12 +128,12 @@ def processOrder(request):
         customer, order = guestOrder(request, data)
 
     total = float(data['form']['total'])
-    order.transaction_id = transaction_id
+    "order.transaction_id = transaction_id"
 
     if total == order.get_cart_total:
         order.complete = True
     order.save()
-
-    Reservation.objects.create(customer=customer, order=order, checkin=data['checkin'], checkout=data['checkout'], adults=data['adults'], children=data['children'])
+    
+    Reservation.objects.create(customer=customer, order=order, checkin=data['form']['checkin'], checkout=data['form']['checkout'], adults=data['form']['adults'], children=data['form']['children'])
 
     return JsonResponse('Payment complete!', safe=False)

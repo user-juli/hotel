@@ -16,11 +16,11 @@ for(var i = 0; i < updateBtns.length; i++){
 
 function addCookieItem(productId, action){
   console.log('User is not authenticated')
-
   if(action == 'add'){
-    var q = $("#nights").val()
+    var night = $("#nights").val()
+    var q = parseInt(night);
     if(cart[productId] == undefined){
-      cart[productId] = {'quantity':1}
+      cart[productId] = {'quantity':q}
     }else{
       cart[productId]['quantity'] = q
     }

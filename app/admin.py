@@ -4,7 +4,7 @@ from . models import Customer,Roomtype,Room,Reservation,ImagesRoom,OrderItem,Ord
 # Register your models here.
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('type_id', 'numb', 'name', 'last_name', 'user', 'email')
+    list_display = ('id','type_id', 'numb', 'name', 'last_name', 'user', 'email')
 
 @admin.register(Roomtype)
 class RoomtypeAdmin(admin.ModelAdmin):
@@ -26,9 +26,14 @@ class RoomAdmin(admin.ModelAdmin):
         form = super(RoomAdmin, self).get_form(request, obj, **kwargs)
         return form
 
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id','customer','date_ordered','complete','transaction_id')
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('id','room','order','quantity','date_added')
+
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'checkin', 'checkout', 'customer', 'order', 'adults', 'children')
-
-admin.site.register(Order)
-admin.site.register(OrderItem)

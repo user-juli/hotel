@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load custom_date %}
 {% block titulo %}Available{% endblock titulo %}
 {% block content %}
 
@@ -13,7 +14,7 @@
     <div class="card">
       <div class="row">
         <div class="col-sm-5">
-          <img class="d-block w-100" src="{{'images/'}}{{room.image_header}}" alt="{{room.name}}">
+          <img class="d-block w-100" src="{{'/images/'}}{{room.image_header}}" alt="{{room.name}}">
         </div>
         <div class="col-sm-7">
           <div class="card-block">
@@ -36,20 +37,21 @@
   <div class="col-lg-5 col-md-5 col-sm-12">
     <div class="jumbotron jumbotron-fluid sticky-top">
       <div class="container">
-        <form method="GET" action="checkout">
+        <form method="GET" action="{% url 'checkout' %}">
           {% csrf_token %}
           <h3>Su Reserva</h3>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <span class="form-label">Check In</span>
-                <input name="din" class="form-control" type="text" value="{{checkin}}" readonly>
+                <input name="din" class="form-control" type="text" value="{{checkin }}" readonly>
+
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <span class="form-label">Check out</span>
-                <input name="dout" class="form-control" type="text" value="{{checkout}}" readonly>
+                <input name="dout" class="form-control" type="text" value="{{checkout }}" readonly>
               </div>
             </div>
           </div>
@@ -68,7 +70,7 @@
             </div>
             <div class="col-md-6">
               <span class="form-label">Noches:</span>
-              <input type="text" class="form-control nights" name="nights" id="nights" value="{{night}}">
+              <input type="text" class="form-control nights" name="nights" id="nights" value="{{night}}" readonly>
             </div>
           </div>
           <br>
@@ -76,8 +78,9 @@
             <div class="cart-row">
               <div style="flex:2"><strong>Item</strong></div>
               <div style="flex:1"><strong>Price</strong></div>
-              <div style="flex:1"><strong>Quantity</strong></div>
+              <div style="flex:1"><strong>Nights</strong></div>
               <div style="flex:1"><strong>Total</strong></div>
+              <div class="flex:1"><strong>Action</strong></div>
             </div>
 
             {% for item in items %}
@@ -87,19 +90,22 @@
               <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
               <div style="flex:1">
                 <p class="quantity">{{item.quantity}}</p>
-                <div class="quantity">
-                  <img data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/arrow-up.png' %}">
-                  <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}">
-                </div>
               </div>
               <div style="flex:1"><p>${{item.get_total}}</p></div>
+              <div style="flex:1">
+                <div class="quantity">
+                <!--  <img data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/arrow-up.png' %}"> -->
+                  <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/trash.png' %}">
+                </div>
+              </div>
             </div>
             {% endfor %}
           </div>
           <br>
           <div class="row">
             <div class="col-md-12">
-              <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">checkout</a>
+              <input type="submit" class="btn btn-success btn-lg" style="float:right; margin:5px;" value="Check">
+              <!-- <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">checkout</a> -->
             </div>
           </div>
 
